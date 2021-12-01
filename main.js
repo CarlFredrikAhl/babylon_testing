@@ -48,6 +48,12 @@ function createScene() {
 
     const house = BABYLON.Mesh.MergeMeshes([box, roof], true, false, null, false, true);
 
+    const detachedHouse = house.createInstance("detachedHouse");
+    detachedHouse.position.x = 3;
+    detachedHouse.scaling = new BABYLON.Vector3(2, 1, 1);
+
+    
+
     return scene;
 }
 
