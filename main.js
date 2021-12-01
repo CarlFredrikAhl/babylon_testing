@@ -43,9 +43,10 @@ function createScene() {
     const sound = new BABYLON.Sound("background_music", "emotional_background_music.wav",
     scene, null, { loop:true, autoplay:true });
 
-
     roof.material = roofMat;
     box.material = boxMat;
+
+    const house = BABYLON.Mesh.MergeMeshes([box, roof], true, false, null, false, true);
 
     return scene;
 }
