@@ -15,6 +15,21 @@ function createScene() {
 
     //OBJECTS
     const ground = buildGround(30, 30);
+    
+    //SOUND
+    const sound = new BABYLON.Sound("background_music", "emotional_background_music.wav",
+    scene, null, { loop:true, autoplay:true });
+
+    
+    createVillage();
+
+    BABYLON.GLTF2Export.GLBAsync(scene, "village.glb").then((glb) => {
+        glb.downloadFiles();
+    });
+    return scene;
+}
+
+function createVillage() {
 
     //const box = buildBox(2);
     const regularHouse = buildHouse(1);
@@ -36,7 +51,7 @@ function createScene() {
     places.push([2, BABYLON.Tools.ToRadians(112), 4, -5]);
     places.push([1, BABYLON.Tools.ToRadians(113), -3, 1]);
     places.push([1, BABYLON.Tools.ToRadians(180), -10, -5]);
-
+    
     const houses = [];
 
     for(let i = 0; i < places.length; i++) {
@@ -50,12 +65,6 @@ function createScene() {
         houses[i].position.x = places[i][2];
         houses[i].position.z = places[i][3];
     }
-    
-    //SOUND
-    const sound = new BABYLON.Sound("background_music", "emotional_background_music.wav",
-    scene, null, { loop:true, autoplay:true });
-
-    return scene;
 }
 
 function buildHouse(width) {
