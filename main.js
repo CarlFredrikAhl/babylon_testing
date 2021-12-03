@@ -38,13 +38,43 @@ function createScene() {
     car.rotation.x = BABYLON.Tools.ToRadians(270);
 
     //Creating wheel
+    const faceUV = [];
 
-    const wheelLB = BABYLON.MeshBuilder.CreateCylinder("wheelLB", {diameter: 0.125, height: 0.05});
+    faceUV[0] = new BABYLON.Vector4(0, 0, 1, 1);
+    faceUV[1] = new BABYLON.Vector4(0, 0.5, 0, 0.5);
+    faceUV[2] = new BABYLON.Vector4(0, 0, 1, 1);
+    
+    const wheelMat = new BABYLON.StandardMaterial("wheelMat");
+    wheelMat.diffuseTexture = new BABYLON.Texture("wheel.png");
+
+    const wheelLB = BABYLON.MeshBuilder.CreateCylinder("wheelLB", {diameter: 0.125, height: 0.05, faceUV: faceUV});
     wheelLB.parent = car;
+    wheelLB.material = wheelMat;
     wheelLB.position.x = -0.2;
     wheelLB.position.y = -0.2;
     wheelLB.position.z = -0.1;
 
+    //Weel animation
+
+    const animWheel = new BABYLON.Animation("wheelAnimation", "rotation.y", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, 
+    BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+    const wheelKeys = [];
+    wheelKeys.push({
+        frame: 0,
+        value: 0
+    });
+    wheelKeys.push({
+        frame: 30,
+        value: BABYLON.Tools.ToRadians(180)
+    });
+
+    animWheel.setKeys(wheelKeys);
+
+    wheelLB.animations = [];
+    wheelLB.animations.push(animWheel);
+
+    
     const wheelLF = wheelLB.clone("wheelLF");
     wheelLF.position.x = 0.1;
     
@@ -53,7 +83,12 @@ function createScene() {
     
     const wheelRF = wheelLF.clone("wheelRF");
     wheelRF.position.y = 0;
-
+    
+    scene.beginAnimation(wheelLB, 0, 30, true);
+    scene.beginAnimation(wheelLF, 0, 30, true);
+    scene.beginAnimation(wheelRB, 0, 30, true);
+    scene.beginAnimation(wheelRF, 0, 30, true);
+    
     return scene;
 }
 
