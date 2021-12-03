@@ -23,6 +23,7 @@ function createScene() {
 
     //Creating car
 
+    //#region CAR
     BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "car.babylon")
     .then(() => {
         const wheelRB = scene.getMeshByName("wheelRB");
@@ -58,7 +59,20 @@ function createScene() {
         scene.beginAnimation(wheelLB, 0, 30, true);
         scene.beginAnimation(wheelLF, 0, 30, true);
     });
+    //#endregion
+
+    //#region CHARACTER
+    BABYLON.SceneLoader.ImportMeshAsync("him", "https://assets.babylonjs.com/meshes/Dude/", "dude.babylon", scene)
+    .then((result) => {
+        var dude = result.meshes[0];
+        dude.scaling = new BABYLON.Vector3(0.005, 0.005, 0.005);
+        dude.position.y = 0.17;
+
+        scene.beginAnimation(result.skeletons[0], 0, 100, true, 1);
+    });
     
+    //#endregion
+
     return scene;
 }
 
