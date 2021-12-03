@@ -23,71 +23,41 @@ function createScene() {
 
     //Creating car
 
-    //base
-    const outline = [
-        new BABYLON.Vector3(-0.3, 0, -0.1),
-        new BABYLON.Vector3(0.2, 0, -0.1),
-    ]
+    BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "car.babylon")
+    .then(() => {
+        const wheelRB = scene.getMeshByName("wheelRB");
+        const wheelRF = scene.getMeshByName("wheelRF");
+        const wheelLB = scene.getMeshByName("wheelLB");
+        const wheelLF = scene.getMeshByName("wheelLF");
+        const car = scene.getMeshByName("car");
+        car.position.y = 0.17;
+        
+        //Car animaton
+        const animCar = new BABYLON.Animation("carAnimation", "position.x", 30, 
+        BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
 
-    //top
-    outline.push(new BABYLON.Vector3(0, 0, 0.1));
-    outline.push(new BABYLON.Vector3(-0.3, 0, 0.1));
+        const carKeys = [];
 
-    const car = BABYLON.MeshBuilder.ExtrudePolygon("car", { shape: outline, depth: 0.2 });
-    car.position.y = 3;
-    car.rotation.x = BABYLON.Tools.ToRadians(270);
+        carKeys.push({
+            frame: 0,
+            value: 0 
+        });
+        
+        carKeys.push({
+            frame: 150,
+            value: 5
+        });
 
-    //Creating wheel
-    const faceUV = [];
-
-    faceUV[0] = new BABYLON.Vector4(0, 0, 1, 1);
-    faceUV[1] = new BABYLON.Vector4(0, 0.5, 0, 0.5);
-    faceUV[2] = new BABYLON.Vector4(0, 0, 1, 1);
-    
-    const wheelMat = new BABYLON.StandardMaterial("wheelMat");
-    wheelMat.diffuseTexture = new BABYLON.Texture("wheel.png");
-
-    const wheelLB = BABYLON.MeshBuilder.CreateCylinder("wheelLB", {diameter: 0.125, height: 0.05, faceUV: faceUV});
-    wheelLB.parent = car;
-    wheelLB.material = wheelMat;
-    wheelLB.position.x = -0.2;
-    wheelLB.position.y = -0.2;
-    wheelLB.position.z = -0.1;
-
-    //Weel animation
-
-    const animWheel = new BABYLON.Animation("wheelAnimation", "rotation.y", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, 
-    BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
-
-    const wheelKeys = [];
-    wheelKeys.push({
-        frame: 0,
-        value: 0
+        animCar.setKeys(carKeys);
+        car.animations = [];
+        car.animations.push(animCar);
+        
+        scene.beginAnimation(car, 0, 150, true);
+        scene.beginAnimation(wheelRB, 0, 30, true);
+        scene.beginAnimation(wheelRF, 0, 30, true);
+        scene.beginAnimation(wheelLB, 0, 30, true);
+        scene.beginAnimation(wheelLF, 0, 30, true);
     });
-    wheelKeys.push({
-        frame: 30,
-        value: BABYLON.Tools.ToRadians(180)
-    });
-
-    animWheel.setKeys(wheelKeys);
-
-    wheelLB.animations = [];
-    wheelLB.animations.push(animWheel);
-
-    
-    const wheelLF = wheelLB.clone("wheelLF");
-    wheelLF.position.x = 0.1;
-    
-    const wheelRB = wheelLB.clone("wheelRB");
-    wheelRB.position.y = 0;
-    
-    const wheelRF = wheelLF.clone("wheelRF");
-    wheelRF.position.y = 0;
-    
-    scene.beginAnimation(wheelLB, 0, 30, true);
-    scene.beginAnimation(wheelLF, 0, 30, true);
-    scene.beginAnimation(wheelRB, 0, 30, true);
-    scene.beginAnimation(wheelRF, 0, 30, true);
     
     return scene;
 }
