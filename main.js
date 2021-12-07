@@ -25,15 +25,22 @@ function createScene() {
 
     let carReady = false;
 
-    //Load village
-    //BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "village.glb");
+    //Detailed village ground
+    const villageGroundMat = new BABYLON.StandardMaterial("villageGroundMat");
+    villageGroundMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/villagegreen.png");
+    villageGroundMat.diffuseTexture.hasAlpha = true;
 
+    const villageGround = new BABYLON.MeshBuilder.CreateGround("villageGround", {width: 24, height: 24});
+    villageGround.material = villageGroundMat;
+
+    //Large ground
     const groundMat = new BABYLON.StandardMaterial("groundMat");
     groundMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/valleygrass.png");
 
     const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "villageheightmap.png"
     , {width: 150, height: 150, subdivisions: 20, minHeight: 0, maxHeight: 10});
     largeGround.material = groundMat;
+    largeGround.position.y = -0.01;
 
     //SOUND
     // const sound = new BABYLON.Sound("background_music", "emotional_background_music.wav",
