@@ -14,6 +14,17 @@ function createScene() {
 
     const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene);
 
+    const wireMat = new BABYLON.StandardMaterial("wireMat");
+    wireMat.wireframe = true;
+
+    const hitBox = BABYLON.MeshBuilder.CreateBox("carBox", {width: 0.5, height: 0.6, depth: 4.5});
+    hitBox.material = wireMat; 
+    hitBox.position.x = 3.1;
+    hitBox.position.y = 0.3;
+    hitBox.position.z = -5;
+
+    let carReady = false;
+
     //Load village
     BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "village.glb");
 
@@ -31,29 +42,37 @@ function createScene() {
         const wheelLB = scene.getMeshByName("wheelLB");
         const wheelLF = scene.getMeshByName("wheelLF");
         const car = scene.getMeshByName("car");
+        carReady = true;
         car.position.y = 0.17;
+        car.position.x = 3;
+        car.position.z = 8;
+        car.rotation.z = BABYLON.Tools.ToRadians(90);
         
         //Car animaton
-        const animCar = new BABYLON.Animation("carAnimation", "position.x", 30, 
+        const animCar = new BABYLON.Animation("carAnimation", "position.z", 30, 
         BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
 
         const carKeys = [];
 
         carKeys.push({
             frame: 0,
-            value: 0 
+            value: 8
         });
         
         carKeys.push({
             frame: 150,
-            value: 5
+            value: -7
+        });
+        carKeys.push({
+            frame: 200,
+            value: -7
         });
 
         animCar.setKeys(carKeys);
         car.animations = [];
         car.animations.push(animCar);
         
-        scene.beginAnimation(car, 0, 150, true);
+        scene.beginAnimation(car, 0, 200, true);
         scene.beginAnimation(wheelRB, 0, 30, true);
         scene.beginAnimation(wheelRF, 0, 30, true);
         scene.beginAnimation(wheelLB, 0, 30, true);
