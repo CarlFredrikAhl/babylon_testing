@@ -12,7 +12,7 @@ function createScene() {
     camera.rotation.x = BABYLON.Tools.ToRadians(20);
     camera.speed = 0.5;
 
-    const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene);
+    const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(2, 1, 0), scene);
 
     const wireMat = new BABYLON.StandardMaterial("wireMat");
     wireMat.alpha = 0;
@@ -28,8 +28,12 @@ function createScene() {
     //Load village
     //BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "village.glb");
 
+    const groundMat = new BABYLON.StandardMaterial("groundMat");
+    groundMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/valleygrass.png");
+
     const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "villageheightmap.png"
     , {width: 150, height: 150, subdivisions: 20, minHeight: 0, maxHeight: 10});
+    largeGround.material = groundMat;
 
     //SOUND
     // const sound = new BABYLON.Sound("background_music", "emotional_background_music.wav",
