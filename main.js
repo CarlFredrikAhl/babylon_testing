@@ -109,6 +109,13 @@ function createScene() {
         let p = 0;
 
         scene.onBeforeRenderObservable.add(() => {
+            //If car is deployed
+            if (carReady) {
+                if (!dude.getChildren()[1].intersectsMesh(hitBox) && scene.getMeshByName("car").intersectsMesh(hitBox)) {
+                    return;
+                }
+                
+            }
             dude.movePOV(0, 0, step);
             distance += step;
 
