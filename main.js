@@ -88,28 +88,24 @@ function createScene() {
     }
 
     const track = [];
-    track.push(new walk(86, 7));
-    track.push(new walk(-85, 14.8));
-    track.push(new walk(-93, 16.5));
-    track.push(new walk(48, 25.5));
-    track.push(new walk(-112, 30.5));
-    track.push(new walk(-72, 33.2));
-    track.push(new walk(42, 37.5));
-    track.push(new walk(-98, 45.2));
-    track.push(new walk(0, 47))
+    track.push(new walk(180, 2.5));
+    track.push(new walk(0, 5));
 
     BABYLON.SceneLoader.ImportMeshAsync("him", "https://assets.babylonjs.com/meshes/Dude/", "dude.babylon", scene)
     .then((result) => {
         var dude = result.meshes[0];
         dude.scaling = new BABYLON.Vector3(0.005, 0.005, 0.005);
         dude.position.y = 0.17;
+        dude.position.x = 1.5;
+        dude.position.z = -7;
         dude.rotate(BABYLON.Axis.Y, BABYLON.Tools.ToRadians(-95), BABYLON.Space.LOCAL);
         const startRotation = dude.rotationQuaternion.clone();
+        const startPosition = dude.position.clone();
 
         scene.beginAnimation(result.skeletons[0], 0, 100, true, 1);
 
         let distance = 0;
-        let step = 0.005;
+        let step = 0.015;
         let p = 0;
 
         scene.onBeforeRenderObservable.add(() => {
@@ -127,7 +123,7 @@ function createScene() {
                 //reset 
                 if(p == 0) {
                     distance = 0;
-                    dude.position = new BABYLON.Vector3(-6, 0, 0);
+                    dude.position = startPosition.clone();
                     dude.rotationQuaternion = startRotation.clone(); //set the rotation to the start rotation
                 }
             }
