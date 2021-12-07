@@ -15,7 +15,7 @@ function createScene() {
     const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene);
 
     const wireMat = new BABYLON.StandardMaterial("wireMat");
-    wireMat.wireframe = true;
+    wireMat.alpha = 0;
 
     const hitBox = BABYLON.MeshBuilder.CreateBox("carBox", {width: 0.5, height: 0.6, depth: 4.5});
     hitBox.material = wireMat; 
@@ -26,7 +26,10 @@ function createScene() {
     let carReady = false;
 
     //Load village
-    BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "village.glb");
+    //BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "village.glb");
+
+    const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "villageheightmap.png"
+    , {width: 150, height: 150, subdivisions: 20, minHeight: 0, maxHeight: 10});
 
     //SOUND
     // const sound = new BABYLON.Sound("background_music", "emotional_background_music.wav",
@@ -114,7 +117,6 @@ function createScene() {
                 if (!dude.getChildren()[1].intersectsMesh(hitBox) && scene.getMeshByName("car").intersectsMesh(hitBox)) {
                     return;
                 }
-                
             }
             dude.movePOV(0, 0, step);
             distance += step;
