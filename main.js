@@ -6,7 +6,7 @@ function createScene() {
 
     const scene = new BABYLON.Scene(engine);
 
-    const camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(1, 5, -3), scene);
+    const camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(1, 1, 0), scene);
     camera.attachControl(canvas, true);
     camera.rotation.y = BABYLON.Tools.ToRadians(10);
     camera.rotation.x = BABYLON.Tools.ToRadians(20);
@@ -14,6 +14,7 @@ function createScene() {
     //camera.upperBetaLimit = Math.PI / 2.2;
 
     const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(2, 1, 0), scene);
+    light.intensity = 0.1;
 
     // Skybox not working
     // const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 150 }, scene);
@@ -25,6 +26,41 @@ function createScene() {
     // skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
     // skybox.material = skyboxMaterial;
 
+    //#region GUI
+    const adt = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    const panel = new BABYLON.GUI.StackPanel();
+    panel.width = "220px";
+    panel.top = "-50px";
+    panel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    panel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+    adt.addControl(panel);
+
+    //Header
+    const header = new  BABYLON.GUI.TextBlock();
+    header.text = "Night to day";
+    header.height = "30px";
+    header.color = "white";
+    panel.addControl(header);
+
+    //Slider
+    const slider = new BABYLON.GUI.Slider();
+    slider.minimum = 0;
+    slider.maximum = 1;
+    slider.borderColor = "black";
+    slider.color = "#AAAAAA"
+    slider.background = "white";
+    slider.value = 1;
+    slider.height = "20px";
+    slider.width = "200px";
+    panel.addControl(slider);
+
+    slider.onValueChangedObservable.add((value) => {
+        if(light) {
+            light.intensity = value;
+        }
+    });
+
+    //#endregion
     //Trees
     const spriteManagerTrees = new BABYLON.SpriteManager("treesManager", "palmtree.png", 2000, {width: 512, height:1024}, scene);
 
@@ -107,6 +143,34 @@ function createScene() {
         }
     }
 
+    //Import lamp-post
+    BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "lamp.babylon").then(() =>{
+        const lampLight = new BABYLON.SpotLight("lampLight", BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, -1, 0), 0.8 * Math.PI, 0.01, scene);
+        lampLight.diffuse = BABYLON.Color3.Yellow();
+        lampLight.parent = scene.getMeshByName("bulb")
+        lampLight.intensity = 0.5;
+
+        const lamp = scene.getMeshByName("lamp");
+        lamp.position = new BABYLON.Vector3(2, 0, 2); 
+        lamp.rotation = BABYLON.Vector3.Zero();
+        lamp.rotation.y = -Math.PI / 4;
+
+        lamp3 = lamp.clone("lamp3");
+        lamp3.position.z = -8;
+
+        lamp1 = lamp.clone("lamp1");
+        lamp1.position.x = -8;
+        lamp1.position.z = 1.2;
+        lamp1.rotation.y = Math.PI / 2;
+
+        lamp2 = lamp1.clone("lamp2");
+        lamp2.position.x = -2.7;
+        lamp2.position.z = 0.8;
+        lamp2.rotation.y = -Math.PI / 2;
+
+    });
+
+
     const wireMat = new BABYLON.StandardMaterial("wireMat");
     wireMat.alpha = 0;
 
@@ -129,6 +193,7 @@ function createScene() {
     //Large ground
     const groundMat = new BABYLON.StandardMaterial("groundMat");
     groundMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/valleygrass.png");
+    groundMat.maxSimultaneousLights = 5;
 
     const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "villageheightmap.png"
         , { width: 150, height: 150, subdivisions: 20, minHeight: 0, maxHeight: 10 });
