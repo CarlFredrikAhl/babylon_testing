@@ -14,6 +14,15 @@ function createScene() {
 
     const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(2, 1, 0), scene);
 
+    const skybox = BABYLON.MeshBuilder.CreateBox("skybox", {size: 1000}, scene);
+    const skyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox", scene);
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    skybox.material = skyboxMaterial;
+
     const wireMat = new BABYLON.StandardMaterial("wireMat");
     wireMat.alpha = 0;
 
