@@ -59,6 +59,54 @@ function createScene() {
     fontain.position.x = -4;
     fontain.position.z = -6;
 
+    //Particle system for fontain
+    const particleSystem = new BABYLON.ParticleSystem("particles", 5000, scene);
+
+    particleSystem.particleTexture = new BABYLON.Texture("url", scene);
+
+    particleSystem.emitter = new BABYLON.Vector3(-4, 0.8, -6);
+    particleSystem.minEmitBox = new BABYLON.Vector3(-0.01, 0, -0.01);
+    particleSystem.maxEmitBox = new BABYLON.Vector3(0.01, 0.01);
+    particleSystem.color1 = new BABYLON.Color4(0, 0, 255, 1.0);
+    particleSystem.color2 = new BABYLON.Color4(0, 40, 255, 1.0);
+    particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+    particleSystem.minSize = 0.01;
+    particleSystem.maxSize = 0.05;
+    particleSystem.minLifeTime = 0.3;
+    particleSystem.maxLifeTime = 1.5;
+    particleSystem.emitRate = 1500;
+    particleSystem.direction1 = new BABYLON.Vector3(-1, 8, 1);
+    particleSystem.direction1 = new BABYLON.Vector3(1, 8, -1);
+    particleSystem.minEmitPower = 0.2;
+    particleSystem.minEmitPower = 0.6;
+    particleSystem.updateSpeed = 0.01;
+    particleSystem.gravity = new BABYLON.Vector3(0 -9.81, 0);
+    //particleSystem.start();
+
+    //Fountain on and off
+    let switched = false; 
+
+    scene.onPointerObservable.add((pointerInfo) => {
+        switch(pointerInfo.type) {
+            case BABYLON.PointerEventTypes.POINTERDOWN:
+                if(pointerInfo.pickInfo.hit) {
+                    pointerDown(pointerInfo.pickInfo.pickedMesh);
+                }
+            break;
+        }
+    });
+
+    const pointerDown = (mesh) => {
+        if(mesh === fontain) { //Picked mesh is the fontain
+            switched = !switched; //Toggle switch (set it to the opposite)
+            if(switched) {
+                particleSystem.start();
+            } else {
+                particleSystem.stop();
+            }
+        }
+    }
+
     const wireMat = new BABYLON.StandardMaterial("wireMat");
     wireMat.alpha = 0;
 
