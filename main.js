@@ -8,7 +8,7 @@ function createScene() {
     const scene = new BABYLON.Scene(engine);
     
     
-    const cam = new BABYLON.FreeCamera("cam", new BABYLON.Vector3(50, 40, 80), scene);
+    const cam = new BABYLON.FreeCamera("cam", new BABYLON.Vector3(60, 50, 90), scene);
     cam.attachControl(canvas, true);
     cam.rotation = new BABYLON.Vector3(0.2, 10, 0);
     
@@ -77,17 +77,16 @@ function createScene() {
         yPos += 5;
     }
 
+    cubes.forEach(cube => {
+        //Force settings
+        var randX = Math.floor(Math.random() * 50);
+        var randY = Math.floor(Math.random() * 50);
+        var randZ = Math.floor(Math.random() * 50);
 
-    //Force settings
-    // var randX = Math.floor(Math.random() * 11);
-    // var randY = Math.floor(Math.random() * 11);
-    // var randZ = Math.floor(Math.random() * 11);
-
-    // var impulseDirection = new BABYLON.Vector3(randX, randY, randZ);
-
-    // cubes.forEach(cube => {
-    //     cube.applyImpulse(impulseDirection);
-    // });
+        var impulseDirection = new BABYLON.Vector3(randX, randY, randZ);
+        
+        cube.applyImpulse(impulseDirection, cube.getAbsolutePosition());
+    });
 
     return scene;
 }
