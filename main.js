@@ -33,8 +33,31 @@ function createScene() {
         const cube = BABYLON.MeshBuilder.CreateBox("box" + i, {width: 5, height: 5, depth: 5}, scene);
         cube.position.y = 2;
          
+        const randomNr = Math.floor(Math.random() * 6);
+        
         const cubeMat = new BABYLON.StandardMaterial("cubeMat");
-        cubeMat.diffuseColor = new BABYLON.Color3.Blue;
+
+        switch(randomNr) {
+            case 0:
+                cubeMat.diffuseColor = new BABYLON.Color3.Blue;
+            break;
+            case 1: 
+                cubeMat.diffuseColor = new BABYLON.Color3.Yellow;
+            break;
+            case 2: 
+                cubeMat.diffuseColor = new BABYLON.Color3.Red;
+            break;
+            case 3:
+                cubeMat.diffuseColor = new BABYLON.Color3.Purple;
+            break;
+            case 4:
+                cubeMat.diffuseColor = new BABYLON.Color3.Green;
+            break;
+            case 5:
+                cubeMat.diffuseColor = new BABYLON.Color3.Magenta;
+            break;
+        }
+
         cube.material = cubeMat;
     }
 
