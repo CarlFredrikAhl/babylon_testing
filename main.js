@@ -27,11 +27,13 @@ function createScene() {
     restitution: 0.5, disableBidirectionalTransformation: true}, scene);
     ground.checkCollisions = true;
 
+    var yPos = 2;
+
     //Cube tower
     for(var i = 0; i < 10; i++) {
 
         const cube = BABYLON.MeshBuilder.CreateBox("box" + i, {width: 5, height: 5, depth: 5}, scene);
-        cube.position.y = 2;
+        cube.position.y = yPos;
          
         const randomNr = Math.floor(Math.random() * 6);
         
@@ -59,6 +61,9 @@ function createScene() {
         }
 
         cube.material = cubeMat;
+
+        //Position next cube on top of other
+        yPos += 5;
     }
 
     return scene;
