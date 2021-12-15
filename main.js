@@ -77,16 +77,25 @@ function createScene() {
         yPos += 5;
     }
 
-    cubes.forEach(cube => {
-        //Force settings
-        var randX = Math.floor(Math.random() * 50);
-        var randY = Math.floor(Math.random() * 50);
-        var randZ = Math.floor(Math.random() * 50);
+    //Add force when clicking cube
+    scene.onPointerObservable.add((pointerInfo) => {
+        switch(pointerInfo.type) {
+            case BABYLON.PointerEventTypes.POINTERDOWN:
+                pointerInfo.pickInfo.pickedMesh.applyImpulse(new BABYLON.Vector3(0, 0, -60), 
+                pointerInfo.pickInfo.pickedMesh.getAbsolutePosition());
+        }
+    }); 
 
-        var impulseDirection = new BABYLON.Vector3(randX, randY, randZ);
+    // cubes.forEach(cube => {
+    //     //Force settings
+    //     var randX = Math.floor(Math.random() * 50);
+    //     var randY = Math.floor(Math.random() * 50);
+    //     var randZ = Math.floor(Math.random() * 50);
+
+    //     var impulseDirection = new BABYLON.Vector3(randX, randY, randZ);
         
-        cube.applyImpulse(impulseDirection, cube.getAbsolutePosition());
-    });
+    //     cube.applyImpulse(impulseDirection, cube.getAbsolutePosition());
+    // });
 
     return scene;
 }
@@ -95,4 +104,7 @@ const scene = createScene();
 
 engine.runRenderLoop(() => {
     scene.render();
+    
+    let divFps = document.getElementById("fps");
+    divFps.innerHTML = engine.getFps().toFixed() + " fps";
 });
