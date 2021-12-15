@@ -4,23 +4,27 @@ const canvas = document.getElementById('renderCanvas');
 const engine = new BABYLON.Engine(canvas, true);
 
 function createScene() {
-
+    
     const scene = new BABYLON.Scene(engine);
-
-
-    const cam = new BABYLON.FreeCamera("cam", new BABYLON.Vector3(25, 20, 35), scene);
+    
+    
+    const cam = new BABYLON.FreeCamera("cam", new BABYLON.Vector3(50, 40, 80), scene);
     cam.attachControl(canvas, true);
-    cam.rotation = new BABYLON.Vector3(0, 10, 0);
-
+    cam.rotation = new BABYLON.Vector3(0.2, 10, 0);
+    
     var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-
+    
     // const environment = scene.createDefaultEnvironment({createGround: false, skyboxSize:1000});
     // environment.setMainColor(BABYLON.Color3.Red);
-
+    
     const ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 500, height:500}, scene);
     
     const groundMat = new BABYLON.StandardMaterial("groundMat");
     groundMat.diffuseColor = new BABYLON.Color3.Gray;
+    
+    //Enable physics
+    var gravity = new BABYLON.Vector3(0, -9.81, 0);
+    scene.enablePhysics(gravity, new BABYLON.OimoJSPlugin());
 
     ground.material = groundMat;
     ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 0, friction:0.8, 
@@ -29,11 +33,14 @@ function createScene() {
 
     var yPos = 2;
 
+    var cubes = [];
+
     //Cube tower
     for(var i = 0; i < 10; i++) {
 
         const cube = BABYLON.MeshBuilder.CreateBox("box" + i, {width: 5, height: 5, depth: 5}, scene);
         cube.position.y = yPos;
+        //cube.position.x = Math.floor(Math.random() * 10);
          
         const randomNr = Math.floor(Math.random() * 6);
         
@@ -61,10 +68,26 @@ function createScene() {
         }
 
         cube.material = cubeMat;
+        cube.physicsImpostor = new BABYLON.PhysicsImpostor(cube, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 1, friction: 1
+        , restitution: 0}, scene);
+
+        cubes.push(cube);
 
         //Position next cube on top of other
         yPos += 5;
     }
+
+
+    //Force settings
+    // var randX = Math.floor(Math.random() * 11);
+    // var randY = Math.floor(Math.random() * 11);
+    // var randZ = Math.floor(Math.random() * 11);
+
+    // var impulseDirection = new BABYLON.Vector3(randX, randY, randZ);
+
+    // cubes.forEach(cube => {
+    //     cube.applyImpulse(impulseDirection);
+    // });
 
     return scene;
 }
